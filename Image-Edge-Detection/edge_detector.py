@@ -1,6 +1,6 @@
 import numpy as np 
 import cv2
-# document link: https://learnopencv.com/edge-detection-using-opencv/
+# document link: https://docs.google.com/document/d/1drBjzXzXEmnJlrrIGS3ApkmBxwpglZ-hzAJrP2qY_Xw/edit?usp=sharing
 
 ### SOBEL ###
 def sobel_function(img_path, blur_ksize=7, sobel_ksize=1, skipping_threshold=10, 
