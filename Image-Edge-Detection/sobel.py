@@ -3,7 +3,6 @@ import numpy as np
 import os
 import argparse
 from edge_detector import sobel_function
-# document link: https://learnopencv.com/edge-detection-using-opencv/
 
 def main(img_name, output_name, img_dir='./imgs', x_direction=True, y_direction=True):
     IMAGE_PATH = os.path.join(img_dir, img_name) 
