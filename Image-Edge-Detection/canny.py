@@ -6,7 +6,9 @@ from edge_detector import canny_function
 
 def main(img_name, output_name, img_dir='./imgs', threshold1=100, threshold2=200):
     IMAGE_PATH = os.path.join(img_dir, img_name) 
-    canny_img = canny_function(IMAGE_PATH, threshold1 = threshold1, threshold2 = threshold2)
+    img = cv2.imread(IMAGE_PATH)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    canny_img = canny_function(img, threshold1 = threshold1, threshold2 = threshold2)
     cv2.imshow("window", canny_img)
     cv2.waitKey(0) 
     if output_name is not None:

@@ -5,8 +5,10 @@ import argparse
 from edge_detector import sobel_function
 
 def main(img_name, output_name, img_dir='./imgs', x_direction=True, y_direction=True):
-    IMAGE_PATH = os.path.join(img_dir, img_name) 
-    sobel_img = sobel_function(IMAGE_PATH, x_direction = x_direction, y_direction = y_direction)
+    IMAGE_PATH = os.path.join(img_dir, img_name)
+    img = cv2.imread(IMAGE_PATH)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB) 
+    sobel_img = sobel_function(img, x_direction = x_direction, y_direction = y_direction)
     cv2.imshow("window", sobel_img)
     cv2.waitKey(0) 
     if output_name is not None:

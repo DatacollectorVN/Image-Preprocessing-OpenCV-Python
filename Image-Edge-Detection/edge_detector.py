@@ -3,11 +3,11 @@ import cv2
 # document link: https://docs.google.com/document/d/1drBjzXzXEmnJlrrIGS3ApkmBxwpglZ-hzAJrP2qY_Xw/edit?usp=sharing
 
 ### SOBEL ###
-def sobel_function(img_path, blur_ksize=7, sobel_ksize=1, skipping_threshold=10, 
+def sobel_function(img, blur_ksize=7, sobel_ksize=1, skipping_threshold=10, 
                    x_direction=True, y_direction=True):
     ''' sobel edge detection 
     Args:
-        img_path: (str) Path to image
+        img: (np.array) img_array with RGB
         blur_ksize: (int) Kernel size parameter for Gaussian Blurry
         sobel_ksize: (int) size of extended Sobel Kernel. It should be 1, 3, 5, 7
         skipping_threshold: (int) ignore weakly edge
@@ -17,11 +17,8 @@ def sobel_function(img_path, blur_ksize=7, sobel_ksize=1, skipping_threshold=10,
         sobel_img: (np.array)
     '''
 
-    # read image
-    img = cv2.imread(img_path)
-
     # convert BGR to Gray
-    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray_img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
     '''Sobel often uses a Gaussian filter to remove noise, smooth the image first 
     to make the edge detection algorithm work better.'''
     # https://docs.opencv.org/3.1.0/d4/d86/group__imgproc__filter.html#gaabe8c836e97159a9193fb0b11ac52cf1
@@ -56,10 +53,10 @@ def sobel_function(img_path, blur_ksize=7, sobel_ksize=1, skipping_threshold=10,
     return sobel_img
 
 ### CANNY EDGE ###
-def canny_function(img_path, blur_ksize=7, threshold1=100, threshold2=200):
+def canny_function(img, blur_ksize=7, threshold1=100, threshold2=200):
     ''' Canny Edge Detection
     Args:
-        img_path: (str) Path to image
+        img: (np.array) img_array with RGB
         blur_ksize: (int) Kernel size parameter for Gaussian Blurry
         threshold1: (int) min threshold
         threshold2: (int) max threshold
@@ -67,8 +64,7 @@ def canny_function(img_path, blur_ksize=7, threshold1=100, threshold2=200):
         canny_img: (np.array)
     '''
 
-    img = cv2.imread(img_path)
-    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray_img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
     blurred_img = cv2.GaussianBlur(gray_img, ksize = (blur_ksize, blur_ksize), sigmaX = 0)
 
     # canny edge
@@ -77,18 +73,18 @@ def canny_function(img_path, blur_ksize=7, threshold1=100, threshold2=200):
     return canny_img
 
 ### Laplacian of Gaussian ### 
-def laplacian_function(img_path, blur_ksize=7, lap_ksize=3, ddepth=cv2.CV_16S):
+def laplacian_function(img, blur_ksize=7, lap_ksize=3, ddepth=cv2.CV_16S):
     ''' Laplacian of Gaussian
     Args: 
-        img_path: (str) Path to image
+        img: (np.array) img_array with RGB
         blur_ksize: (int) Kernel size parameter for Gaussian Blurry
         lap_ksize: (int) Kernel size parameter for Laplacian
     Output:
         lap_img: (np.array)
     '''
-    img = cv2.imread(img_path)
+
     blurred_img = cv2.GaussianBlur(img, ksize = (blur_ksize, blur_ksize), sigmaX = 0)
-    gray_img = cv2.cvtColor(blurred_img, cv2.COLOR_BGR2GRAY)
+    gray_img = cv2.cvtColor(blurred_img, cv2.COLOR_RGB2GRAY)
    
     # laplacian
     lap_img = cv2.Laplacian(gray_img, ddepth = ddepth, ksize = lap_ksize)
@@ -96,3 +92,27 @@ def laplacian_function(img_path, blur_ksize=7, lap_ksize=3, ddepth=cv2.CV_16S):
     lap_img = cv2.convertScaleAbs(lap_img)
     
     return lap_img
+
+### Difference of Gaussian ###
+def dog_function(img, median_ksize=5, gaussian_ksize=0):
+    ''' Difference of Gaussian
+    Args:
+        img: (np.array) img_array with RGB
+        median_ksize: (int) Kernel size parameter for Median Bluury
+        gaussian_ksize: (int) Kernel size parameter for Gaussian Bluury
+    '''
+    # median blur
+    #https://theailearner.com/tag/cv2-medianblur/
+    median_img = cv2.medianBlur(img, median_ksize)
+
+    # Calculate Gaussian blur with different sigma
+    gaussian_3 = cv2.GaussianBlur(median_img, (gaussian_ksize, gaussian_ksize), 3)
+    gaussian_5 = cv2.GaussianBlur(median_img, (gaussian_ksize, gaussian_ksize), 5)
+
+    # calculate DoG
+    dog_img = gaussian_3 - gaussian_5
+
+    # remove negative value
+    dog_img[dog_img < 0] = 0
+
+    return dog_img
