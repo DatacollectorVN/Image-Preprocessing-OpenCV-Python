@@ -63,6 +63,8 @@ def canny_function(img_path, blur_ksize=7, threshold1=100, threshold2=200):
         blur_ksize: (int) Kernel size parameter for Gaussian Blurry
         threshold1: (int) min threshold
         threshold2: (int) max threshold
+    Output:
+        canny_img: (np.array)
     '''
 
     img = cv2.imread(img_path)
@@ -70,6 +72,27 @@ def canny_function(img_path, blur_ksize=7, threshold1=100, threshold2=200):
     blurred_img = cv2.GaussianBlur(gray_img, ksize = (blur_ksize, blur_ksize), sigmaX = 0)
 
     # canny edge
-    canny_img = cv2.Canny(img, threshold1 = threshold1, threshold2 = threshold2)
+    canny_img = cv2.Canny(blurred_img, threshold1 = threshold1, threshold2 = threshold2)
 
     return canny_img
+
+### Laplacian of Gaussian ### 
+def laplacian_function(img_path, blur_ksize=7, lap_ksize=3, ddepth=cv2.CV_16S):
+    ''' Laplacian of Gaussian
+    Args: 
+        img_path: (str) Path to image
+        blur_ksize: (int) Kernel size parameter for Gaussian Blurry
+        lap_ksize: (int) Kernel size parameter for Laplacian
+    Output:
+        lap_img: (np.array)
+    '''
+    img = cv2.imread(img_path)
+    blurred_img = cv2.GaussianBlur(img, ksize = (blur_ksize, blur_ksize), sigmaX = 0)
+    gray_img = cv2.cvtColor(blurred_img, cv2.COLOR_BGR2GRAY)
+   
+    # laplacian
+    lap_img = cv2.Laplacian(gray_img, ddepth = ddepth, ksize = lap_ksize)
+    # converting back to uint8
+    lap_img = cv2.convertScaleAbs(lap_img)
+    
+    return lap_img
