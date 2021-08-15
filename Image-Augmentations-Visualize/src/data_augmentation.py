@@ -5,7 +5,7 @@ import os
 import sys
 
 from numpy.lib.type_check import imag
-from utils import clip_bboxes, rotate_img, convert_2_to_4_corners, rotate_bboxes, convert_4_to_2_corners, letterbox_img
+from src.utils import clip_bboxes, rotate_img, convert_2_to_4_corners, rotate_bboxes, convert_4_to_2_corners, letterbox_img
 
 class RandomHorizontalFlip_(object):
     '''Radnomly horizontally flip the Image with the probability p.
@@ -738,7 +738,7 @@ class Resize(object):
         # correspoding to the location of image in canvas
         translate_matrix = np.array([[del_w, del_h, del_w, del_h]]).astype(int)
 
-        #print(f'translate_matrix = {translate_matrix}')
+        print(f'translate_matrix = {translate_matrix}')
         # translate the cooridnate of bounding boxes
         bboxes[:, :4] += translate_matrix
 
@@ -771,9 +771,6 @@ class RandomHSV(object):
                     If tuple, the int is sampled from the range  specified by the tuple.  
 
     """
-
-    pass
-
 '''Combining multiple transformations'''
 class Sequence_(object):
     '''Initialize squence object of transofrmation to the image/bboxes

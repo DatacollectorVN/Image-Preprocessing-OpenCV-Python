@@ -2,7 +2,7 @@ import cv2
 import numpy as np 
 import os
 import argparse
-from edge_detector import dog_function
+from src.edge_detector import dog_function
 
 def main(img_name, output_name, img_dir='./imgs', median_ksize=5, gaussian_ksize=0):
     IMAGE_PATH = os.path.join(img_dir, img_name)

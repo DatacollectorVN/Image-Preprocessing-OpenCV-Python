@@ -61,15 +61,15 @@ def clip_bboxes(bboxes, clip_box, labels, alpha):
     bboxes = np.hstack((x_min, y_min, x_max, y_max))
 
     # compute the percentage of bboxes area after
-    #print(f'bboxes_area(bboxes) = {bboxes_area(bboxes)}')
-    #print(f'area_bboxes = {area_bboxes}')
+    print(f'bboxes_area(bboxes) = {bboxes_area(bboxes)}')
+    print(f'area_bboxes = {area_bboxes}')
     percen_area_bboxes = bboxes_area(bboxes) / area_bboxes
 
     # the percentage of loss area
     percen_loss_area_bboxes = 1 - percen_area_bboxes
-    #print(f'loss_area_bboxes = {percen_loss_area_bboxes}')
+    print(f'loss_area_bboxes = {percen_loss_area_bboxes}')
     mask = (percen_loss_area_bboxes < alpha).astype(int)
-    #print(f'mask = {mask}')
+    print(f'mask = {mask}')
     
     # remain the boxes with satisfied condition with corespoding to index
     bboxes = bboxes[mask == 1, :]

@@ -1,0 +1,6 @@
+img_id,x_min,y_min,x_max,y_max,labels
+051132a778e61a86eb147c7c6f564dfe.jpg,317.0,434.0,680.0,557.0,Cardiomegaly
+051132a778e61a86eb147c7c6f564dfe.jpg,427.0,244.0,537.0,349.0,Aortic enlargement
+051132a778e61a86eb147c7c6f564dfe.jpg,530.0,150.0,601.0,201.0,Pleural thickening
+0622cd29e4e0e4f198abf15614819ae8.jpg,451.0,219.0,564.0,333.0,Aortic enlargement
+0622cd29e4e0e4f198abf15614819ae8.jpg,342.0,492.0,695.0,645.0,Cardiomegaly

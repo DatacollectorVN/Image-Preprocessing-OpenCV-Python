@@ -1,0 +1,3 @@
+317,434,680,557,Cardiomegaly
+427,244,537,349,Aortic enlargement
+530,150,601,201,Pleural thickening

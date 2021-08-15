@@ -3,12 +3,14 @@ import cv2
 import matplotlib.pyplot as plt
 import os 
 import sys
-from utils import draw_bboxes
-from data_augmentation import RandomVerticalFlip_
+from src.utils import draw_bboxes
+from src.data_augmentation import RandomTranslate
 import argparse
 img_file = '051132a778e61a86eb147c7c6f564dfe.jpg'
 annotations_file = '051132a778e61a86eb147c7c6f564dfe.txt'
-color = [[255, 0, 0], [0, 255, 0], [0, 0, 255]]
+color = {'Cardiomegaly' : [255, 0, 0], 
+         'Aortic enlargement' : [0, 255, 0], 
+         'Pleural thickening' : [0, 0, 255]}
 
 def main(img_file=img_file, annotations_file=annotations_file, color=color, output_name=None):
         img_dir = os.path.join('dataset', img_file)
@@ -26,26 +28,25 @@ def main(img_file=img_file, annotations_file=annotations_file, color=color, outp
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         print(f'img.shape = {img.shape}')
 
-        horizontal_flip = RandomVerticalFlip_(p = 1)
-        flip_img, flip_bboxes = horizontal_flip(img, bboxes)
-        print(f'flipp_bboxes = \n{flip_bboxes}')
-        
+        random_translate = RandomTranslate(translate = (0.1, 0.2), diff = False, p = 1)
+        translate_img, translate_bboxes, translate_labels = random_translate(img, bboxes, labels)
+
         # draw original img
-        for i in range(len(labels)):
-            draw_bboxes(img, bbox = bboxes[i], label = labels[i], color = color[i], thickness = 3)
+        for i in range(len(bboxes)):
+            draw_bboxes(img, bbox = bboxes[i], label = labels[i], color = color[labels[i]], thickness = 3)
         
-        # draw flipped img
-        for i in range(len(labels)):
-            draw_bboxes(flip_img, bbox = flip_bboxes[i], label = labels[i], color = color[i], thickness = 3)
+        # draw scale img
+        for i in range(len(translate_bboxes)):
+            draw_bboxes(translate_img, bbox = translate_bboxes[i], label = translate_labels[i], color = color[translate_labels[i]], thickness = 3)
 
         cv2.imshow('original-img', img)
-        cv2.imshow('flip-img', flip_img)
+        cv2.imshow('flip-img', translate_img)
         cv2.waitKey(0)
 
         if output_name is not None:
             os.makedirs('./outputs', exist_ok = True)
-            cv2.imwrite(os.path.join('./outputs', 'original-img.jpg'), img)
-            cv2.imwrite(os.path.join('./outputs', output_name), flip_img)
+            #scv2.imwrite(os.path.join('./outputs', 'original-img.jpg'), img)
+            cv2.imwrite(os.path.join('./outputs', output_name), translate_img)
             print('Done saved')
 
 if __name__ == '__main__':

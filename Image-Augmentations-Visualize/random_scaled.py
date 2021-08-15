@@ -3,12 +3,14 @@ import cv2
 import matplotlib.pyplot as plt
 import os 
 import sys
-from utils import draw_bboxes
-from data_augmentation import RandomScale
+from src.utils import draw_bboxes
+from src.data_augmentation import RandomScale
 import argparse
 img_file = '051132a778e61a86eb147c7c6f564dfe.jpg'
 annotations_file = '051132a778e61a86eb147c7c6f564dfe.txt'
-color = [[255, 0, 0], [0, 255, 0], [0, 0, 255]]
+color = {'Cardiomegaly' : [255, 0, 0], 
+         'Aortic enlargement' : [0, 255, 0], 
+         'Pleural thickening' : [0, 0, 255]}
 
 def main(img_file=img_file, annotations_file=annotations_file, color=color, output_name=None):
         img_dir = os.path.join('dataset', img_file)
@@ -26,19 +28,16 @@ def main(img_file=img_file, annotations_file=annotations_file, color=color, outp
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         print(f'img.shape = {img.shape}')
 
-        random_scale = RandomScale(scale = (0.3, 0.5), diff = False, p = 1)
-        scale_img, scale_bboxes, scale_labels, scale_color = random_scale(img, bboxes, labels, color)
-        scale_color = scale_color.tolist() # return to list if not --> get error in opencv 
-        print(f'scale_bboxes = \n{scale_bboxes}')
+        random_scale = RandomScale(scale = (0.1, 0.3), diff = False, p = 1)
+        scale_img, scale_bboxes, scale_labels = random_scale(img, bboxes, labels)
         
         # draw original img
-       
         for i in range(len(bboxes)):
-            draw_bboxes(img, bbox = bboxes[i], label = labels[i], color = color[i], thickness = 3)
+            draw_bboxes(img, bbox = bboxes[i], label = labels[i], color = color[labels[i]], thickness = 3)
         
         # draw scale img
         for i in range(len(scale_bboxes)):
-            draw_bboxes(scale_img, bbox = scale_bboxes[i], label = scale_labels[i], color = scale_color[i], thickness = 3)
+            draw_bboxes(scale_img, bbox = scale_bboxes[i], label = scale_labels[i], color = color[scale_labels[i]], thickness = 3)
 
         cv2.imshow('original-img', img)
         cv2.imshow('flip-img', scale_img)
