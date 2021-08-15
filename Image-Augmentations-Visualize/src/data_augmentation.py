@@ -3,8 +3,6 @@ import numpy as np
 import cv2 
 import os 
 import sys
-
-from numpy.lib.type_check import imag
 from src.utils import clip_bboxes, rotate_img, convert_2_to_4_corners, rotate_bboxes, convert_4_to_2_corners, letterbox_img
 
 class RandomHorizontalFlip_(object):
