@@ -695,6 +695,7 @@ class Resize(object):
 
     Args:
         inp_dim: (tuple(int)) with (width, height). Tuple containing the size to which the image will be resized.
+    
     Outputs:
         img: (ndarray) The scaled image with shape (H, W, C)
         bboxes: (ndarray) The transformed bounding boxes with shape (N, 4)
@@ -768,9 +769,130 @@ class RandomHSV(object):
                     and added to the hue of the image. 
                     If tuple, the int is sampled from the range  specified by the tuple.  
 
+    Outputs:
+        img: (ndarray) The scaled image with shape (H, W, C)
+        bboxes: (ndarray) The transformed bounding boxes with shape (N, 4)
+                N is number of bounding boxes and 4 represents x_min, y_min, x_max, y_max.
+        labels: (ndarray) the transformed labels
     """
 
-    pass
+    def __init__(self, hue=None, saturation=None, brightness=None):
+        
+        if hue:
+            self.hue = hue
+        else:
+            self.hue = 0
+        
+        if saturation:
+            self.saturation = saturation
+        else:
+            self.saturation = 0
+        
+        if brightness:
+            self.brightness = brightness
+        else:
+            self.brightness = 0
+        
+        if type(self.hue) != tuple:
+            self.hue = (-self.hue, self.hue)
+            
+        if type(self.saturation) != tuple:
+            self.saturation = (-self.saturation, self.saturation)
+        
+        if type(brightness) != tuple:
+            self.brightness = (-self.brightness, self.brightness)
+    
+    def __call__(self, img, bboxes, labels):
+        # img which RGB
+        # get random value 
+        hue = random.randint(*self.hue)
+        saturation = random.randint(*self.saturation)
+        brightness = random.randint(*self.brightness)
+
+        img = img.astype(int)
+
+        #HSV
+        hsv = np.array([hue, saturation, brightness]).astype(int)
+        hsv = np.reshape(hsv, newshape = (1, 1, 3))
+        
+        # add hsv into image
+        img += hsv
+
+        # clip the image min = 0 and max = 255
+        img = np.clip(img, 0, 255)
+
+        # change the first channel (Red) with min = 0 and max = 179
+        img[:, :, 0] = np.clip(img[:, :, 0], 0, 179)
+
+        img = img.astype(np.uint8)
+
+        return img, bboxes, labels
+
+
+class HSV(object):
+    """HSV transform to vary hue saturation and brightness
+    Hue has a range of 0-179
+    Saturation and Brightness have a range of 0-255. 
+    Chose the amount you want to change thhe above quantities accordingly.
+
+    Args:
+        hue: (None or int)
+             If int, a random int is uniformly sampled and added to the image.
+        saturation: (None, or int)
+                    If None, the saturation of the image is left unchanged. 
+                    If int, a random int is uniformly sampled and added to the hue of the image. 
+        brightness: (None or int)
+                    If int, a random int is uniformly sampled and added to the hue of the image. 
+                    
+    Outputs:
+        img: (ndarray) The scaled image with shape (H, W, C)
+        bboxes: (ndarray) The transformed bounding boxes with shape (N, 4)
+                N is number of bounding boxes and 4 represents x_min, y_min, x_max, y_max.
+        labels: (ndarray) the transformed labels
+    """
+
+    def __init__(self, hue=None, saturation=None, brightness=None):
+        
+        if hue:
+            self.hue = hue
+        else:
+            self.hue = 0
+        
+        if saturation:
+            self.saturation = saturation
+        else:
+            self.saturation = 0
+        
+        if brightness:
+            self.brightness = brightness
+        else:
+            self.brightness = 0
+    
+    def __call__(self, img, bboxes, labels):
+        # img which RGB
+        hue = self.hue
+        saturation = self.saturation
+        brightness = self.brightness
+        
+        img = img.astype(int)
+
+        #HSV
+        hsv = np.array([hue, saturation, brightness]).astype(int)
+        hsv = np.reshape(hsv, newshape = (1, 1, 3))
+        
+        # add hsv into image
+        img += hsv
+
+        # clip the image min = 0 and max = 255
+        img = np.clip(img, 0, 255)
+
+        # change the first channel (Red) with min = 0 and max = 179
+        img[:, :, 0] = np.clip(img[:, :, 0], 0, 179)
+
+        img = img.astype(np.uint8)
+
+        return img, bboxes, labels
+
 
 '''Combining multiple transformations'''
 class Sequence_(object):
