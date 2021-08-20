@@ -28,7 +28,7 @@ def main(img_file=img_file, annotations_file=annotations_file, color=color, outp
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         print(f'img.shape = {img.shape}')
 
-        rotate = Rotate(angle = -45, p = 1)
+        rotate = Rotate(angle = 90, p = 1)
         rotate_img, rotate_bboxes, rotate_labels = rotate(img, bboxes, labels)
         
         # draw original img

@@ -3,3 +3,5 @@
 **/**/__pycache__
 Image-Augmentations/dataset/*.txt
 Image-Augmentations/dataset/*.ipynb
+Image-Augmentations-Visualize/*.ipynb
+Image-Augmentations-odma/
