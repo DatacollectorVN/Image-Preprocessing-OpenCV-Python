@@ -1,6 +1,5 @@
 import numpy as np 
 import cv2
-# document link: https://docs.google.com/document/d/1drBjzXzXEmnJlrrIGS3ApkmBxwpglZ-hzAJrP2qY_Xw/edit?usp=sharing
 
 ### SOBEL ###
 def sobel_function(img, blur_ksize=7, sobel_ksize=1, skipping_threshold=10, 
@@ -104,6 +103,7 @@ def dog_function(img, median_ksize=5, gaussian_ksize=0):
     # median blur
     #https://theailearner.com/tag/cv2-medianblur/
     median_img = cv2.medianBlur(img, median_ksize)
+    #median_img = cv2.cvtColor(median_img, cv2.COLOR_RGB2GRAY)
 
     # Calculate Gaussian blur with different sigma
     gaussian_3 = cv2.GaussianBlur(median_img, (gaussian_ksize, gaussian_ksize), 3)
